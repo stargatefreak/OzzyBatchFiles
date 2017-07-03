@@ -1,5 +1,4 @@
 @echo off
-setlocal
 set version=2.2
 set STARTINGDIR=%CD%
 cd..
@@ -7,6 +6,9 @@ echo Checking and Downloading update...
 git pull
 cls
 timeout 1 /nobreak >NUL
+goto INITIALIZATION
+:INITIALIZATION
+setlocal
 rem *************************************************************
 rem ****              CONFIGURATION LINES                     ***
 rem *************************************************************
