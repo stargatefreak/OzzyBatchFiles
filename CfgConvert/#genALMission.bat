@@ -1,5 +1,5 @@
 @echo off
-set version=2.2a
+set version=2.2b
 set STARTINGDIR=%CD%
 cd..
 echo Checking and Downloading update...
