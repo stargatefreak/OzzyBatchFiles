@@ -21,7 +21,7 @@ rem *************************************************************
 rem ************        BELOW IS THE BANNER          ************
 rem *************************************************************
 set RETURNFROMBANNER=SECTION1
-
+set armaMissionDir=%armaDir%\mpmissions
 :BANNER
 echo   ================================================================
 echo   ==           OzzyGaming Mission Generator v2.0                ==
@@ -96,15 +96,25 @@ CHOICE /C LT /N /D T /T 5 /M "[L]ive or [T]est"
 IF ERRORLEVEL 1 (
 	SET SERVERPORT=Live
 	set arma=%armaDir%\mpmissions\Update\AltisLife_Live
+	SET SERVERPORTABV=L
 )
 IF ERRORLEVEL 2 (
 	SET SERVERPORT=Test
+	SET SERVERPORTABV=T
 	set arma=%armaDir%\mpmissions\Update\AltisLife_Test
 )
 
 if exist Mission%SERVERPORT% goto fileExists
 > Mission%SERVERPORT% echo 0
 :fileExists
+
+for /f "delims=_." %%d in ('dir /x /b %armaMissionDir%\%mission%_%SERVERPORTABV%*.pbo') do (
+	echo %%e
+	goto foundMission
+)
+:foundMission
+pause
+
 for /f "delims=" %%f in (Mission%SERVERPORT%) do (
 	set serverDem=%%f
 	goto break
@@ -113,6 +123,7 @@ for /f "delims=" %%f in (Mission%SERVERPORT%) do (
 :break
 if %serverDem% LSS 3 (set /a serverDem+=1) else (set /a serverDem=1)
 > Mission%SERVERPORT% echo %serverDem%
+if %SERVERPORT% EQU Test (set missionname=%mission%%serverDem%_%SERVERPORTABV%) else (set missionname=%mission%%serverDem%_%SERVERPORTABV%)
 
 if %CLIENTPATCH% EQU 1 (
 	set newFolder=%dir%\%mission%.%MAP%
@@ -168,7 +179,6 @@ timeout 1 /nobreak >NUL
 	goto BANNER
 	:SECTION8
 	echo Compiling Client side PBO ...
-	if %SERVERPORT% EQU Test (set missionname=%mission%%serverDem%T) else (set missionname=%mission%%serverDem%)
 	"C:\Program Files\PBO Manager v.1.4 beta\PBOConsole.exe" -pack "%dir%\%mission%.%MAP%" "%arma%\%missionname%.%MAP%.pbo" >NUL
 	timeout 1 /nobreak >NUL
 )
