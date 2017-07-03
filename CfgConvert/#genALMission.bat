@@ -103,6 +103,8 @@ IF ERRORLEVEL 1 (
 	SET SERVERPORT=Live
 	set arma=%armaDir%\mpmissions\Update\AltisLife_Live
 	SET SERVERPORTABV=L
+	FINDSTR /I /V "reset" "%dir%\life_server\Functions\MySQL\fn_init.sqf">"%dir%\life_server\Functions\MySQL\fn_init.sqf.tmp"
+	xcopy /Y /E /I "%dir%\life_server\Functions\MySQL\fn_init.sqf.tmp" "%dir%\life_server\Functions\MySQL\fn_init.sqf">NUL
 )
 IF ERRORLEVEL 2 (
 	SET SERVERPORT=Test
