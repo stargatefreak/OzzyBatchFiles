@@ -1,5 +1,5 @@
 @echo off
-set version=2.2
+set version=2.2a
 set STARTINGDIR=%CD%
 cd..
 echo Checking and Downloading update...
@@ -23,7 +23,7 @@ rem ****        DO NOT EDIT ANYTHING BELOW THIS LINE          ***
 rem *************************************************************
 title OzzyGaming Mission Generator v%version%
 color 1f
-mode con:cols=68 lines=30
+mode con:cols=69 lines=30
 
 rem *************************************************************
 rem ************        BELOW IS THE BANNER          ************
@@ -31,11 +31,11 @@ rem *************************************************************
 set RETURNFROMBANNER=SECTION1
 set armaMissionDir=%armaDir%\mpmissions
 :BANNER
-echo   ================================================================
+echo   =================================================================
 echo   ==           OzzyGaming Mission Generator v%version%                ==
-echo   ==                                                            ==
-echo   ==       created by Aaron for exclusive use to OzzyGaming.com ==
-echo   ================================================================
+echo   ==                                                             ==
+echo   ==       created by Aaron for exclusive use to OzzyGaming.com  ==
+echo   =================================================================
 echo.
 echo.
 GOTO %RETURNFROMBANNER%
