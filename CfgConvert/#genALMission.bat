@@ -1,10 +1,11 @@
 @echo off
+setlocal
 set version=2.0
 rem *************************************************************
 rem ****              CONFIGURATION LINES                     ***
 rem *************************************************************
 
-set mission=AltisLifeRPG-OG1B
+set mission=AltisLifeRPG-OG
 set gitDir=C:\git\OzzyGaming-4.0
 set armaDir=C:\ozzygamingservices\arma3
 
@@ -100,6 +101,19 @@ IF ERRORLEVEL 2 (
 	SET SERVERPORT=Test
 	set arma=%armaDir%\mpmissions\Update\AltisLife_Test
 )
+
+if exist Mission%SERVERPORT% goto fileExists
+> Mission%SERVERPORT% echo 0
+:fileExists
+for /f "delims=" %%f in (Mission%SERVERPORT%) do (
+	set serverDem=%%f
+	goto break
+)
+
+:break
+if %serverDem% LSS 3 (set /a serverDem+=1) else (set /a serverDem=1)
+> Mission%SERVERPORT% echo %serverDem%
+
 if %CLIENTPATCH% EQU 1 (
 	set newFolder=%dir%\%mission%.%MAP%
 	rmdir %mission%.%MAP% >NUL
@@ -154,7 +168,8 @@ timeout 1 /nobreak >NUL
 	goto BANNER
 	:SECTION8
 	echo Compiling Client side PBO ...
-	"C:\Program Files\PBO Manager v.1.4 beta\PBOConsole.exe" -pack "%dir%\%mission%.%MAP%" "%arma%\%mission%.%MAP%.pbo" >NUL
+	if %SERVERPORT% EQU Test (set missionname=%mission%%serverDem%T) else (set missionname=%mission%%serverDem%)
+	"C:\Program Files\PBO Manager v.1.4 beta\PBOConsole.exe" -pack "%dir%\%mission%.%MAP%" "%arma%\%missionname%.%MAP%.pbo" >NUL
 	timeout 1 /nobreak >NUL
 )
 if %SERVERPATCH% EQU 1 (
@@ -176,10 +191,9 @@ timeout 1 /nobreak >NUL
 xcopy /Y /E /I "%arma%\configs\%MAP%" "%arma%" >NUL
 timeout 1 /nobreak >NUL
 rem echo "%arma%\configs\%MAP%\config_AltisLife%SERVERPORT%.cfg" "%arma%\config_AltisLife%SERVERPORT%.cfg"
-
 set updateConfig=%arma%\config_AltisLife%SERVERPORT%.cfg
 echo. >>%updateConfig%
-echo 		template = "%mission%.%MAP%"; >>%updateConfig%
+echo 		template = "%missionname%.%MAP%"; >>%updateConfig%
 echo 		difficulty = "Custom"; >>%updateConfig%
 echo 	}; >>%updateConfig%
 echo }; >>%updateConfig%
@@ -204,3 +218,4 @@ if %errorlevel% EQU 1 (
 	cd %arma%
 	call C:\ozzygamingservices\arma3\#Life_Altis_%SERVERPORT%_Start.bat
 )
+endlocal
