@@ -1,10 +1,19 @@
 @echo off
-set version=2.0
+set version=2.2
+set STARTINGDIR=%CD%
+cd..
+echo Checking and Downloading update...
+git pull
+cls
+timeout 1 /nobreak >NUL
+goto INITIALIZATION
+:INITIALIZATION
+setlocal
 rem *************************************************************
 rem ****              CONFIGURATION LINES                     ***
 rem *************************************************************
 
-set mission=AltisLifeRPG-OG1B
+set mission=AltisLifeRPG-OG
 set gitDir=C:\git\OzzyGaming-4.0
 set armaDir=C:\ozzygamingservices\arma3
 
@@ -20,10 +29,10 @@ rem *************************************************************
 rem ************        BELOW IS THE BANNER          ************
 rem *************************************************************
 set RETURNFROMBANNER=SECTION1
-
+set armaMissionDir=%armaDir%\mpmissions
 :BANNER
 echo   ================================================================
-echo   ==           OzzyGaming Mission Generator v2.0                ==
+echo   ==           OzzyGaming Mission Generator v%version%                ==
 echo   ==                                                            ==
 echo   ==       created by Aaron for exclusive use to OzzyGaming.com ==
 echo   ================================================================
@@ -95,11 +104,47 @@ CHOICE /C LT /N /D T /T 5 /M "[L]ive or [T]est"
 IF ERRORLEVEL 1 (
 	SET SERVERPORT=Live
 	set arma=%armaDir%\mpmissions\Update\AltisLife_Live
+	SET SERVERPORTABV=L
 )
 IF ERRORLEVEL 2 (
 	SET SERVERPORT=Test
+	SET SERVERPORTABV=T
 	set arma=%armaDir%\mpmissions\Update\AltisLife_Test
+	cd "%dir%\life_server\Functions\MySQL"
+	FINDSTR /I /V "reset" fn_init.sqf>fn_init.sqf.tmp
+	del fn_init.sqf
+	ren fn_init.sqf.tmp fn_init.sqf
+	pause
 )
+%dir:~0,2%
+cd %dir%
+
+if exist Mission%SERVERPORT% goto fileExists
+> Mission%SERVERPORT% echo 0
+:fileExists
+for /f "tokens=2 delims=_." %%d in ('dir /x /b %armaMissionDir%\%mission%_*_%SERVERPORTABV%.%MAP%.pbo') do (
+	set serverDem=%%d
+	goto breakFoundMission
+) 
+:foundMission
+
+for /f "delims=" %%f in (Mission%SERVERPORT%) do (
+	set serverDem=%%f
+	goto breakFoundMission
+)
+
+:breakFoundMission
+cls	
+set RETURNFROMBANNER=SECTION11
+	goto BANNER
+
+:SECTION11
+if %serverDem% LSS 3 (set /a serverDem+=1) else (set /a serverDem=1)
+> Mission%SERVERPORT% echo %serverDem%
+if %SERVERPORT% EQU Test (set missionname=%mission%_%serverDem%_%SERVERPORTABV%) else (set missionname=%mission%_%serverDem%_%SERVERPORTABV%)
+echo Next Missionfile name: %missionname%
+pause
+
 if %CLIENTPATCH% EQU 1 (
 	set newFolder=%dir%\%mission%.%MAP%
 	rmdir %mission%.%MAP% >NUL
@@ -107,7 +152,7 @@ if %CLIENTPATCH% EQU 1 (
 	set RETURNFROMBANNER=SECTION7
 	goto BANNER
 	:SECTION7
-	echo %mission%.%MAP%
+	echo %missionname%.%MAP%
 	mkdir %mission%.%MAP%
 	echo Duplicating mission file...
 	%dir:~0,2%
@@ -154,7 +199,7 @@ timeout 1 /nobreak >NUL
 	goto BANNER
 	:SECTION8
 	echo Compiling Client side PBO ...
-	"C:\Program Files\PBO Manager v.1.4 beta\PBOConsole.exe" -pack "%dir%\%mission%.%MAP%" "%arma%\%mission%.%MAP%.pbo" >NUL
+	"C:\Program Files\PBO Manager v.1.4 beta\PBOConsole.exe" -pack "%dir%\%mission%.%MAP%" "%arma%\%missionname%.%MAP%.pbo" >NUL
 	timeout 1 /nobreak >NUL
 )
 if %SERVERPATCH% EQU 1 (
@@ -176,10 +221,9 @@ timeout 1 /nobreak >NUL
 xcopy /Y /E /I "%arma%\configs\%MAP%" "%arma%" >NUL
 timeout 1 /nobreak >NUL
 rem echo "%arma%\configs\%MAP%\config_AltisLife%SERVERPORT%.cfg" "%arma%\config_AltisLife%SERVERPORT%.cfg"
-
 set updateConfig=%arma%\config_AltisLife%SERVERPORT%.cfg
 echo. >>%updateConfig%
-echo 		template = "%mission%.%MAP%"; >>%updateConfig%
+echo 		template = "%missionname%.%MAP%"; >>%updateConfig%
 echo 		difficulty = "Custom"; >>%updateConfig%
 echo 	}; >>%updateConfig%
 echo }; >>%updateConfig%
@@ -204,3 +248,4 @@ if %errorlevel% EQU 1 (
 	cd %arma%
 	call C:\ozzygamingservices\arma3\#Life_Altis_%SERVERPORT%_Start.bat
 )
+endlocal

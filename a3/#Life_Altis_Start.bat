@@ -20,6 +20,7 @@ timeout /t 1 /nobreak >NUL
 :: Remove old fpsmalloc logs
 del %StartDir%\malloc_*.log
 del %StartDir%\mpmissions\Update\AltisLife_Live\malloc_*.log
+del /q /f %StartDir%\mpmissions\AltisLifeRPG-OG_*_L.pbo
 
 ::Archives Battleye logs
 start %StartDir%\battleye_64x_al\BELOGA.bat
@@ -29,7 +30,7 @@ CD %StartDir%\mpmissions\Update\AltisLife_Live
 DIR *.*
 IF %ERRORLEVEL% EQU 1  GOTO NoUpdate
 COPY /y *life_server.pbo %StartDir%\@life_server_altis\addons
-COPY /y *AltisLifeRPG-OG9.Altis.pbo %StartDir%\mpmissions
+COPY /y *AltisLifeRPG-*.Altis.pbo %StartDir%\mpmissions
 COPY /y *altis-life-rpg-4.ini %StartDir%\@extDB3_lifeLive\sql_custom
 COPY /y *config_AltisLifeLive.cfg %StartDir%\config
 COPY /y *basic_AltisLife.cfg %StartDir%\config
