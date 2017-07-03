@@ -1,6 +1,6 @@
 @echo off
 setlocal
-set version=2.1
+set version=2.2
 set STARTINGDIR=%CD%
 cd..
 echo Checking and Downloading update...
