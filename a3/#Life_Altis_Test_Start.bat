@@ -23,6 +23,7 @@ set StartDir=C:\ozzygamingservices\arma3
 :: Remove old fpsmalloc logs
 del %StartDir%\malloc_*.log
 del %StartDir%\mpmissions\Update\AltisLife_Test\malloc_*.log
+del /q /f %StartDir%\mpmissions\AltisLifeRPG-OG_*_T.pbo
 
 ::Archives Battleye logs
 start %StartDir%\battleye_64x_alTest\BELOGA.bat

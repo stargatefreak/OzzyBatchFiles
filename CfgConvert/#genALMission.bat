@@ -107,23 +107,28 @@ IF ERRORLEVEL 2 (
 if exist Mission%SERVERPORT% goto fileExists
 > Mission%SERVERPORT% echo 0
 :fileExists
-
-for /f "delims=_." %%d in ('dir /x /b %armaMissionDir%\%mission%_%SERVERPORTABV%*.pbo') do (
-	echo %%e
-	goto foundMission
-)
+for /f "tokens=2 delims=_." %%d in ('dir /x /b %armaMissionDir%\%mission%_*_%SERVERPORTABV%.%MAP%.pbo') do (
+	set serverDem=%%d
+	goto breakFoundMission
+) 
 :foundMission
-pause
 
 for /f "delims=" %%f in (Mission%SERVERPORT%) do (
 	set serverDem=%%f
-	goto break
+	goto breakFoundMission
 )
 
-:break
+:breakFoundMission
+cls	
+set RETURNFROMBANNER=SECTION11
+	goto BANNER
+
+:SECTION11
 if %serverDem% LSS 3 (set /a serverDem+=1) else (set /a serverDem=1)
 > Mission%SERVERPORT% echo %serverDem%
-if %SERVERPORT% EQU Test (set missionname=%mission%%serverDem%_%SERVERPORTABV%) else (set missionname=%mission%%serverDem%_%SERVERPORTABV%)
+if %SERVERPORT% EQU Test (set missionname=%mission%_%serverDem%_%SERVERPORTABV%) else (set missionname=%mission%_%serverDem%_%SERVERPORTABV%)
+echo Next Missionfile name: %missionname%
+pause
 
 if %CLIENTPATCH% EQU 1 (
 	set newFolder=%dir%\%mission%.%MAP%
@@ -132,7 +137,7 @@ if %CLIENTPATCH% EQU 1 (
 	set RETURNFROMBANNER=SECTION7
 	goto BANNER
 	:SECTION7
-	echo %mission%.%MAP%
+	echo %missionname%.%MAP%
 	mkdir %mission%.%MAP%
 	echo Duplicating mission file...
 	%dir:~0,2%
