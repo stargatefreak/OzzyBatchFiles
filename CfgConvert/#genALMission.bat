@@ -108,9 +108,14 @@ IF ERRORLEVEL 2 (
 	SET SERVERPORT=Test
 	SET SERVERPORTABV=T
 	set arma=%armaDir%\mpmissions\Update\AltisLife_Test
-	FINDSTR /I /V "reset" "%dir%\life_server\Functions\MySQL\fn_init.sqf">"%dir%\life_server\Functions\MySQL\fn_init.sqf.tmp"
-	xcopy /Y /E /I "%dir%\life_server\Functions\MySQL\fn_init.sqf.tmp" "%dir%\life_server\Functions\MySQL\fn_init.sqf">NUL
+	cd "%dir%\life_server\Functions\MySQL"
+	FINDSTR /I /V "reset" fn_init.sqf>fn_init.sqf.tmp
+	del fn_init.sqf
+	ren fn_init.sqf.tmp fn_init.sqf
+	pause
 )
+%dir:~0,2%
+cd %dir%
 
 if exist Mission%SERVERPORT% goto fileExists
 > Mission%SERVERPORT% echo 0
