@@ -30,7 +30,7 @@ set RETURNFROMBANNER=SECTION1
 set armaMissionDir=%armaDir%\mpmissions
 :BANNER
 echo   ================================================================
-echo   ==           OzzyGaming Mission Generator v2.0                ==
+echo   ==           OzzyGaming Mission Generator v%version%                ==
 echo   ==                                                            ==
 echo   ==       created by Aaron for exclusive use to OzzyGaming.com ==
 echo   ================================================================
