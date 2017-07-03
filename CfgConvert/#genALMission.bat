@@ -1,6 +1,12 @@
 @echo off
 setlocal
 set version=2.0
+set STARTINGDIR=%CD%
+cd..
+echo Checking and Downloading update...
+git pull
+cls
+timeout 1 /nobreak >NUL
 rem *************************************************************
 rem ****              CONFIGURATION LINES                     ***
 rem *************************************************************
