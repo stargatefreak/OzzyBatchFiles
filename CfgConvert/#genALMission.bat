@@ -161,7 +161,7 @@ if %CLIENTPATCH% EQU 1 (
 	xcopy /Y /E /I "%mission%.%MAP%\config%MAP%" %mission%.%MAP% >NUL
 	RD /S /Q %mission%.%MAP%\configMalden
 	RD /S /Q %mission%.%MAP%\configAltis
-
+::pause
 	cd %mission%.%MAP%
 	mkdir "configs"
 	%StartDir:~0,2%
@@ -171,7 +171,8 @@ if %CLIENTPATCH% EQU 1 (
 	rmdir /S /Q "%dir%\%mission%.%MAP%\configScripts"
 	timeout 1 /nobreak >NUL
 	:: Binarize all .hpp files into desc.ext
-	"%CfgConvert%" -q -bin -dst "%dir%\%mission%.%MAP%\description.bin" "%dir%\%mission%.%MAP%\description.ext" >NUL
+	"%CfgConvert%" -q -bin -dst "%dir%\%mission%.%MAP%\description.bin" "%dir%\%mission%.%MAP%\description.ext"
+::pause
 	timeout 1 /nobreak >NUL
 	@if Errorlevel 1 pause
 	%dir:~0,2%
