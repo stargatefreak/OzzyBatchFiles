@@ -3,10 +3,10 @@ set version=2.2b
 set STARTINGDIR=%CD%
 cd..
 echo Checking and Downloading update...
-git pull
+::git pull
 cls
-timeout 1 /nobreak >NUL
-goto INITIALIZATION
+::timeout 1 /nobreak >NUL
+::goto INITIALIZATION
 :INITIALIZATION
 setlocal
 rem *************************************************************
@@ -210,10 +210,10 @@ if %SERVERPATCH% EQU 1 (
 )
 echo Compilation Completed Successfully.
 timeout 3 /nobreak >NUL
-cls
-	set RETURNFROMBANNER=SECTION9
-	goto BANNER
-	:SECTION9
+REM cls
+	REM set RETURNFROMBANNER=SECTION9
+	REM goto BANNER
+	REM :SECTION9
 	
 echo Compiling Server config files...
 %arma:~0,2%
